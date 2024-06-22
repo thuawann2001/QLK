@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -38,10 +40,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.*;
+import java.util.Map;
+import java.util.HashMap;
 //Import thư viện JDBC của MySQL
 import com.mysql.cj.jdbc.Driver;
 import java.awt.SystemColor;
-
+import java.util.Arrays;
 public class GUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -55,22 +59,25 @@ public class GUI extends JFrame {
     private JTextField textField_9;
     private JTable table;
     private DefaultTableModel model;
-    private ArrayList<JCheckBox> checkBoxes;
+    private Map<String, boolean[]> rolePermissions = new HashMap<>();
+    private Map<String, String[]> rolePermissionNames = new HashMap<>();
+    private List<JCheckBox> checkBoxes;
+
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    GUI frame = new GUI();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                try {
+//                    GUI frame = new GUI();
+//                    frame.setVisible(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//    }
 
     /**
      * Create the frame.
@@ -313,35 +320,55 @@ public class GUI extends JFrame {
         panel_2.setLayout(null);
         
         JLabel lblNewLabel = new JLabel("Quản lí phân quyền");
-        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
         lblNewLabel.setBounds(213, 22, 129, 13);
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
         panel_2.add(lblNewLabel);
         
         JLabel lblNewLabel_1 = new JLabel("Nhóm quyền");
-        lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
         lblNewLabel_1.setBounds(121, 59, 85, 13);
+        lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 14));
         panel_2.add(lblNewLabel_1);
         
         JComboBox comboBox = new JComboBox();
+        comboBox.setBounds(244, 59, 98, 21);
         comboBox.setFont(new Font("Times New Roman", Font.BOLD, 14));
         comboBox.setModel(new DefaultComboBoxModel(new String[] {"Quản lý", "Nhân viên"}));
-        comboBox.setBounds(244, 59, 85, 21);
         panel_2.add(comboBox);
         
-        JButton btnNewButton_3 = new JButton("Thêm quyền");
-        btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        btnNewButton_3.setBounds(49, 341, 123, 21);
-        panel_2.add(btnNewButton_3);
-        
         JButton btnNewButton_4 = new JButton("Sửa quyền");
-        btnNewButton_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
         btnNewButton_4.setBounds(195, 341, 116, 21);
+        btnNewButton_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
         panel_2.add(btnNewButton_4);
         
-        JButton btnNewButton_5 = new JButton("Xóa quyền");
-        btnNewButton_5.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        JButton btnNewButton_5 = new JButton("Lưu quyền");
         btnNewButton_5.setBounds(343, 341, 116, 21);
+        btnNewButton_5.setFont(new Font("Times New Roman", Font.BOLD, 14));
         panel_2.add(btnNewButton_5);
+        
+        JCheckBox chckbxNewCheckBox_2 = new JCheckBox("Quản lí nhập hàng");
+        chckbxNewCheckBox_2.setBounds(236, 107, 150, 21);
+        chckbxNewCheckBox_2.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        panel_2.add(chckbxNewCheckBox_2);
+        
+        JCheckBox chckbxNewCheckBox_3 = new JCheckBox("Quản lí sản phẩm");
+        chckbxNewCheckBox_3.setBounds(236, 144, 150, 21);
+        chckbxNewCheckBox_3.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        panel_2.add(chckbxNewCheckBox_3);
+        
+        JCheckBox chckbxNewCheckBox_4 = new JCheckBox("Quản lí nhân viên");
+        chckbxNewCheckBox_4.setBounds(236, 185, 150, 21);
+        chckbxNewCheckBox_4.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        panel_2.add(chckbxNewCheckBox_4);
+        
+        JCheckBox chckbxNewCheckBox_5 = new JCheckBox("Quản lí khách hàng");
+        chckbxNewCheckBox_5.setBounds(236, 224, 150, 21);
+        chckbxNewCheckBox_5.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        panel_2.add(chckbxNewCheckBox_5);
+        
+        JCheckBox chckbxNewCheckBox_6 = new JCheckBox("Quản lí thống kê");
+        chckbxNewCheckBox_6.setBounds(236, 266, 150, 21);
+        chckbxNewCheckBox_6.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        panel_2.add(chckbxNewCheckBox_6);
         
         // Khởi tạo model cho JTable
         model = new DefaultTableModel();
@@ -576,269 +603,188 @@ public class GUI extends JFrame {
        
        
         
-        comboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	// Xóa các JCheckBox cũ trong panel_2
-            	Component[] components = panel_2.getComponents();
-            	for (Component component : components) {
-            	    if (component instanceof JCheckBox) {
-            	        panel_2.remove(component);
-            	    }
-            	}
-            	panel_2.revalidate();
-            	panel_2.repaint();
-
-                // Lấy nhóm quyền đã chọn từ JComboBox
-                String nhomQuyen = (String) comboBox.getSelectedItem();
-
-                // Thiết lập mã nhóm quyền dựa vào lựa chọn
-                String maNhomQuyen;
-                if (nhomQuyen.equals("Quản lý")) {
-                    maNhomQuyen = "N01";
-                } else if (nhomQuyen.equals("Nhân viên")) {
-                    maNhomQuyen = "N02";
-                } else {
-                    // Xử lý khi không có lựa chọn phù hợp
-                    return;
-                }
-
-                // Kết nối đến cơ sở dữ liệu
-                Connection conn = null;
-                PreparedStatement pstmt = null;
-                ResultSet rs = null;
-                try {
-                    conn = DriverManager.getConnection(url, user, password);
-
-                    // Truy vấn để lấy danh sách quyền tương ứng với mã nhóm quyền
-                    String sql = "SELECT * FROM phanquyen WHERE maquyen = ?";
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, maNhomQuyen);
-                    rs = pstmt.executeQuery();
-
-                    // Đặt vị trí cho các JCheckBox mới
-                    int posY = 100; // Vị trí ban đầu y cho các JCheckBox
-                    int gap = 30; // Khoảng cách giữa các JCheckBox
-
-                    // Hiển thị các JCheckBox tương ứng với quyền từ cơ sở dữ liệu
-                    while (rs.next()) {
-                        String tenQuyen = rs.getString("tenquyen");
-
-                        JCheckBox checkBox = new JCheckBox();
-                        checkBox.setText(tenQuyen);
-                        checkBox.setFont(new Font("Times New Roman", Font.BOLD, 14));
-                        checkBox.setBounds(244, posY, 160, 21);
-                        panel_2.add(checkBox);
-
-                        posY += gap; // Tăng vị trí y cho checkbox tiếp theo
-                    }
-
-                    // Cập nhật panel_2 để hiển thị lại các JCheckBox mới
-                    panel_2.revalidate();
-                    panel_2.repaint();
-
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(GUI.this, "Lỗi khi lấy dữ liệu từ cơ sở dữ liệu: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                } finally {
-                    // Đóng ResultSet, PreparedStatement và Connection
-                    try {
-                        if (rs != null) rs.close();
-                        if (pstmt != null) pstmt.close();
-                        if (conn != null) conn.close();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
         
-        btnNewButton_3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Hiển thị hộp thoại nhập tên quyền mới
-                String tenQuyenMoi = JOptionPane.showInputDialog(GUI.this, "Nhập tên quyền mới:");
-                
-                if (tenQuyenMoi != null && !tenQuyenMoi.isEmpty()) {
-                    // Lấy mã nhóm quyền từ JComboBox
-                    String nhomQuyen = (String) comboBox.getSelectedItem();
-                    String maNhomQuyen = (nhomQuyen.equals("Quản lý")) ? "N01" : "N02";
-                    
-                    // Kết nối đến cơ sở dữ liệu
-                    Connection conn = null;
-                    PreparedStatement pstmt = null;
-                    try {
-                        conn = DriverManager.getConnection(url, user, password);
-                        
-                        // Câu lệnh SQL để thêm quyền mới vào cơ sở dữ liệu
-                        String sql = "INSERT INTO phanquyen (maquyen, tenquyen) VALUES (?, ?)";
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.setString(1, maNhomQuyen);
-                        pstmt.setString(2, tenQuyenMoi);
-                        
-                        // Thực thi câu lệnh SQL
-                        int rowsInserted = pstmt.executeUpdate();
-                        
-                        if (rowsInserted > 0) {
-                            // Tạo JCheckBox mới và thêm vào panel_2
-                            JCheckBox checkBox = new JCheckBox(tenQuyenMoi);
-                            checkBox.setFont(new Font("Times New Roman", Font.BOLD, 14));
-                            panel_2.add(checkBox);
-                            
-                            // Cập nhật layout của panel_2
-                            panel_2.revalidate();
-                            panel_2.repaint();
-                            
-                            JOptionPane.showMessageDialog(GUI.this, "Thêm quyền mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(GUI.this, "Thêm quyền mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        }
-                        
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(GUI.this, "Lỗi khi thêm quyền mới: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    } finally {
-                        // Đóng PreparedStatement và Connection
-                        try {
-                            if (pstmt != null) pstmt.close();
-                            if (conn != null) conn.close();
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
         
-        btnNewButton_4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Lấy JCheckBox đang được chọn
-                Component[] components = panel_2.getComponents();
-                JCheckBox selectedCheckBox = null;
-                for (Component component : components) {
-                    if (component instanceof JCheckBox && ((JCheckBox) component).isSelected()) {
-                        selectedCheckBox = (JCheckBox) component;
-                        break;
+        
+//        btnNewButton_4.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                // Lấy JCheckBox đang được chọn
+//                Component[] components = panel_2.getComponents();
+//                JCheckBox selectedCheckBox = null;
+//                for (Component component : components) {
+//                    if (component instanceof JCheckBox && ((JCheckBox) component).isSelected()) {
+//                        selectedCheckBox = (JCheckBox) component;
+//                        break;
+//                    }
+//                }
+//                
+//                if (selectedCheckBox != null) {
+//                    // Hiển thị hộp thoại nhập tên quyền mới
+//                    String tenQuyenMoi = JOptionPane.showInputDialog(GUI.this, "Nhập tên quyền mới:", selectedCheckBox.getText());
+//                    
+//                    if (tenQuyenMoi != null && !tenQuyenMoi.isEmpty()) {
+//                        // Lấy mã nhóm quyền từ JComboBox
+//                        String nhomQuyen = (String) comboBox.getSelectedItem();
+//                        String maNhomQuyen = (nhomQuyen.equals("Quản lý")) ? "N01" : "N02";
+//                        
+//                        // Kết nối đến cơ sở dữ liệu
+//                        Connection conn = null;
+//                        PreparedStatement pstmt = null;
+//                        try {
+//                            conn = DriverManager.getConnection(url, user, password);
+//                            
+//                            // Câu lệnh SQL để cập nhật tên quyền trong cơ sở dữ liệu
+//                            String sql = "UPDATE phanquyen SET tenquyen = ? WHERE maquyen = ? AND tenquyen = ?";
+//                            pstmt = conn.prepareStatement(sql);
+//                            pstmt.setString(1, tenQuyenMoi);
+//                            pstmt.setString(2, maNhomQuyen);
+//                            pstmt.setString(3, selectedCheckBox.getText());
+//                            
+//                            // Thực thi câu lệnh SQL
+//                            int rowsUpdated = pstmt.executeUpdate();
+//                            
+//                            if (rowsUpdated > 0) {
+//                                // Cập nhật tên quyền trên JCheckBox
+//                                selectedCheckBox.setText(tenQuyenMoi);
+//                                
+//                                JOptionPane.showMessageDialog(GUI.this, "Sửa quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                            } else {
+//                                JOptionPane.showMessageDialog(GUI.this, "Sửa quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+//                            }
+//                            
+//                        } catch (SQLException ex) {
+//                            ex.printStackTrace();
+//                            JOptionPane.showMessageDialog(GUI.this, "Lỗi khi sửa quyền: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+//                        } finally {
+//                            // Đóng PreparedStatement và Connection
+//                            try {
+//                                if (pstmt != null) pstmt.close();
+//                                if (conn != null) conn.close();
+//                            } catch (SQLException ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    JOptionPane.showMessageDialog(GUI.this, "Vui lòng chọn quyền cần sửa!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                }
+//            }
+//        });
+     // Tạo một danh sách để lưu trữ các JCheckBox
+        checkBoxes = Arrays.asList(
+        	    chckbxNewCheckBox_2, chckbxNewCheckBox_3, chckbxNewCheckBox_4, 
+        	    chckbxNewCheckBox_5, chckbxNewCheckBox_6
+        	);
+        rolePermissions.put("Quản lý", new boolean[checkBoxes.size()]);
+        rolePermissions.put("Nhân viên", new boolean[checkBoxes.size()]);
+     // Khởi tạo quyền mặc định cho mỗi vai trò
+        comboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedRole = (String) e.getItem();
+                    boolean[] permissions = rolePermissions.get(selectedRole);
+                    for (int i = 0; i < checkBoxes.size(); i++) {
+                        checkBoxes.get(i).setSelected(permissions[i]);
                     }
-                }
-                
-                if (selectedCheckBox != null) {
-                    // Hiển thị hộp thoại nhập tên quyền mới
-                    String tenQuyenMoi = JOptionPane.showInputDialog(GUI.this, "Nhập tên quyền mới:", selectedCheckBox.getText());
-                    
-                    if (tenQuyenMoi != null && !tenQuyenMoi.isEmpty()) {
-                        // Lấy mã nhóm quyền từ JComboBox
-                        String nhomQuyen = (String) comboBox.getSelectedItem();
-                        String maNhomQuyen = (nhomQuyen.equals("Quản lý")) ? "N01" : "N02";
-                        
-                        // Kết nối đến cơ sở dữ liệu
-                        Connection conn = null;
-                        PreparedStatement pstmt = null;
-                        try {
-                            conn = DriverManager.getConnection(url, user, password);
-                            
-                            // Câu lệnh SQL để cập nhật tên quyền trong cơ sở dữ liệu
-                            String sql = "UPDATE phanquyen SET tenquyen = ? WHERE maquyen = ? AND tenquyen = ?";
-                            pstmt = conn.prepareStatement(sql);
-                            pstmt.setString(1, tenQuyenMoi);
-                            pstmt.setString(2, maNhomQuyen);
-                            pstmt.setString(3, selectedCheckBox.getText());
-                            
-                            // Thực thi câu lệnh SQL
-                            int rowsUpdated = pstmt.executeUpdate();
-                            
-                            if (rowsUpdated > 0) {
-                                // Cập nhật tên quyền trên JCheckBox
-                                selectedCheckBox.setText(tenQuyenMoi);
-                                
-                                JOptionPane.showMessageDialog(GUI.this, "Sửa quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(GUI.this, "Sửa quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                            }
-                            
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(GUI.this, "Lỗi khi sửa quyền: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        } finally {
-                            // Đóng PreparedStatement và Connection
-                            try {
-                                if (pstmt != null) pstmt.close();
-                                if (conn != null) conn.close();
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(GUI.this, "Vui lòng chọn quyền cần sửa!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
         
         btnNewButton_5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Lấy JCheckBox đang được chọn
-                Component[] components = panel_2.getComponents();
-                JCheckBox selectedCheckBox = null;
-                for (Component component : components) {
-                    if (component instanceof JCheckBox && ((JCheckBox) component).isSelected()) {
-                        selectedCheckBox = (JCheckBox) component;
-                        break;
+                String selectedRole = (String) comboBox.getSelectedItem();
+                boolean[] permissions = rolePermissions.get(selectedRole);
+                
+                boolean anySelected = false;
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    permissions[i] = checkBoxes.get(i).isSelected();
+                    if (permissions[i]) {
+                        anySelected = true;
                     }
                 }
-                
-                if (selectedCheckBox != null) {
-                    // Hiển thị hộp thoại xác nhận xóa quyền
-                    int confirmResult = JOptionPane.showConfirmDialog(GUI.this, "Bạn có chắc muốn xóa quyền này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-                    
-                    if (confirmResult == JOptionPane.YES_OPTION) {
-                        // Lấy mã nhóm quyền từ JComboBox
-                        String nhomQuyen = (String) comboBox.getSelectedItem();
-                        String maNhomQuyen = (nhomQuyen.equals("Quản lý")) ? "N01" : "N02";
+
+                if (anySelected) {
+                    JOptionPane.showMessageDialog(GUI.this, 
+                        "Lưu quyền thành công cho " + selectedRole, 
+                        "Thông báo", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(GUI.this, 
+                        "Vui lòng chọn quyền để lưu", 
+                        "Cảnh báo", 
+                        JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });  
+        
+        checkBoxes = Arrays.asList(
+                chckbxNewCheckBox_2, chckbxNewCheckBox_3, chckbxNewCheckBox_4, 
+                chckbxNewCheckBox_5, chckbxNewCheckBox_6
+            );
+       
+        rolePermissions.put("Quản lý", new boolean[checkBoxes.size()]);
+        rolePermissions.put("Nhân viên", new boolean[checkBoxes.size()]);
+        // Khởi tạo tên quyền ban đầu
+        String[] initialNames = new String[checkBoxes.size()];
+        for (int i = 0; i < checkBoxes.size(); i++) {
+            initialNames[i] = checkBoxes.get(i).getText();
+        }
+        rolePermissionNames.put("Quản lý", initialNames.clone());
+        rolePermissionNames.put("Nhân viên", initialNames.clone());
+
+      
+
+        // ... code cho comboBox và btnNewButton_5 (Lưu quyền) như trước
+
+        btnNewButton_4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedRole = (String) comboBox.getSelectedItem();
+                boolean[] permissions = rolePermissions.get(selectedRole);
+                String[] names = rolePermissionNames.get(selectedRole);
+
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    if (checkBoxes.get(i).isSelected()) {
+                        String currentName = names[i];
+                        String input = JOptionPane.showInputDialog(GUI.this,
+                            "Nhập tên mới cho quyền " + currentName + ":",
+                            currentName);
                         
-                        // Kết nối đến cơ sở dữ liệu
-                        Connection conn = null;
-                        PreparedStatement pstmt = null;
-                        try {
-                            conn = DriverManager.getConnection(url, user, password);
-                            
-                            // Câu lệnh SQL để xóa quyền khỏi cơ sở dữ liệu
-                            String sql = "DELETE FROM phanquyen WHERE maquyen = ? AND tenquyen = ?";
-                            pstmt = conn.prepareStatement(sql);
-                            pstmt.setString(1, maNhomQuyen);
-                            pstmt.setString(2, selectedCheckBox.getText());
-                            
-                            // Thực thi câu lệnh SQL
-                            int rowsDeleted = pstmt.executeUpdate();
-                            
-                            if (rowsDeleted > 0) {
-                                // Xóa JCheckBox khỏi panel_2
-                                panel_2.remove(selectedCheckBox);
-                                panel_2.revalidate();
-                                panel_2.repaint();
-                                
-                                JOptionPane.showMessageDialog(GUI.this, "Xóa quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(GUI.this, "Xóa quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                            }
-                            
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                            JOptionPane.showMessageDialog(GUI.this, "Lỗi khi xóa quyền: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        } finally {
-                            // Đóng PreparedStatement và Connection
-                            try {
-                                if (pstmt != null) pstmt.close();
-                                if (conn != null) conn.close();
-                            } catch (SQLException ex) {
-                                ex.printStackTrace();
-                            }
+                        if (input != null && !input.trim().isEmpty()) {
+                            names[i] = input.trim();
+                            permissions[i] = true;
+                            checkBoxes.get(i).setText(input.trim());
                         }
                     }
-                } else {
-                    JOptionPane.showMessageDialog(GUI.this, "Vui lòng chọn quyền cần xóa!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+                // Cập nhật trạng thái checkbox sau khi sửa
+                for (int i = 0; i < checkBoxes.size(); i++) {
+                    checkBoxes.get(i).setSelected(permissions[i]);
+                }
+
+                JOptionPane.showMessageDialog(GUI.this,
+                    "Đã cập nhật quyền cho " + selectedRole,
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        // Thêm ItemListener cho comboBox để cập nhật tên quyền khi chuyển đổi vai trò
+        comboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedRole = (String) e.getItem();
+                    boolean[] permissions = rolePermissions.get(selectedRole);
+                    String[] names = rolePermissionNames.get(selectedRole);
+                    for (int i = 0; i < checkBoxes.size(); i++) {
+                        checkBoxes.get(i).setSelected(permissions[i]);
+                        checkBoxes.get(i).setText(names[i]);
+                    }
                 }
             }
         });
+        setVisible(true);
+        
     }
-                
 }
 
