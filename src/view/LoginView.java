@@ -3,13 +3,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class LoginGUI extends JFrame {
+public class LoginView extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JCheckBox rememberMeCheckBox;
 
-    public LoginGUI() {
+    public LoginView() {
     	getContentPane().setBackground(SystemColor.controlShadow);
         setTitle("Đăng nhập");
         setBounds(100, 100, 450, 373);
@@ -77,14 +77,14 @@ public class LoginGUI extends JFrame {
                 boolean rememberMe = rememberMeCheckBox.isSelected();
 
                 if (authenticateUser(username, password)) {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "Đăng nhập thành công!");
+                    JOptionPane.showMessageDialog(LoginView.this, "Đăng nhập thành công!");
                     if (rememberMe) {
                         // Lưu thông tin đăng nhập (trong ứng dụng thực tế, bạn nên mã hóa thông tin này)
                         // Ví dụ: saveLoginInfo(username, password);
                     }
                     openMainGUI();
                 } else {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "Đăng nhập thất bại. Vui lòng thử lại.");
+                    JOptionPane.showMessageDialog(LoginView.this, "Đăng nhập thất bại. Vui lòng thử lại.");
                 }
             }
         });
@@ -100,9 +100,9 @@ public class LoginGUI extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    GUI frame = new GUI();
+                    QuanTriView frame = new QuanTriView();
                     frame.setVisible(true);
-                    LoginGUI.this.dispose(); // Đóng cửa sổ đăng nhập
+                    LoginView.this.dispose(); // Đóng cửa sổ đăng nhập
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -114,7 +114,7 @@ public class LoginGUI extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    LoginGUI frame = new LoginGUI();
+                    LoginView frame = new LoginView();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

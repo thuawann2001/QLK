@@ -51,7 +51,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.*;
 import javax.swing.border.EtchedBorder;
-public class GUI extends JFrame {
+public class QuanTriView extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -71,23 +71,23 @@ public class GUI extends JFrame {
     /**
      * Launch the application.
      */
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                try {
-//                    GUI frame = new GUI();
-//                    frame.setVisible(true);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    QuanTriView frame = new QuanTriView();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     /**
      * Create the frame.
      */
-    public GUI() {
+    public QuanTriView() {
     	setBackground(SystemColor.inactiveCaptionBorder);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 701, 500);
@@ -182,10 +182,18 @@ public class GUI extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(SystemColor.activeCaption);
 
-        JLabel lblNewLabel_6 = new JLabel("                                   THÔNG TIN NHÂN VIÊN");
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
+        titlePanel.setBackground(SystemColor.activeCaption);
+
+        titlePanel.add(Box.createHorizontalGlue());
+        JLabel lblNewLabel_6 = new JLabel("THÔNG TIN NHÂN VIÊN");
         lblNewLabel_6.setForeground(Color.BLACK);
         lblNewLabel_6.setFont(new Font("Times New Roman", Font.BOLD, 18));
-        topPanel.add(lblNewLabel_6, BorderLayout.NORTH);
+        titlePanel.add(lblNewLabel_6);
+        titlePanel.add(Box.createHorizontalGlue());
+
+        topPanel.add(titlePanel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridLayout(5, 4, 10, 10));
         centerPanel.setBackground(SystemColor.activeCaption);
@@ -345,7 +353,7 @@ public class GUI extends JFrame {
         gbcCheckBox2.gridx = 1;
         gbcCheckBox2.gridy = 1;
 
-        JCheckBox chckbxNewCheckBox_3 = new JCheckBox("Quản lí sản phẩm");
+        JCheckBox chckbxNewCheckBox_3 = new JCheckBox("Quản lí xuất hàng");
         chckbxNewCheckBox_3.setForeground(SystemColor.desktop);
         chckbxNewCheckBox_3.setFont(new Font("Times New Roman", Font.BOLD, 16));
         centerPanel1.add(chckbxNewCheckBox_3, gbcCheckBox2);
@@ -367,7 +375,7 @@ public class GUI extends JFrame {
         gbcCheckBox4.gridx = 1;
         gbcCheckBox4.gridy = 2;
 
-        JCheckBox chckbxNewCheckBox_5 = new JCheckBox("Quản lí khách hàng");
+        JCheckBox chckbxNewCheckBox_5 = new JCheckBox("Quản lí tồn kho");
         chckbxNewCheckBox_5.setForeground(SystemColor.desktop);
         chckbxNewCheckBox_5.setFont(new Font("Times New Roman", Font.BOLD, 16));
         centerPanel1.add(chckbxNewCheckBox_5, gbcCheckBox4);
@@ -385,6 +393,25 @@ public class GUI extends JFrame {
         centerPanel1.add(chckbxNewCheckBox_6, gbcCheckBox5);
 
         panel_2.add(centerPanel1, BorderLayout.CENTER);
+        
+     // Sau khi bạn đã tạo comboBox và tất cả các JCheckBox
+
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedRole = (String) comboBox.getSelectedItem();
+                boolean isManager = "Quản lý".equals(selectedRole);
+
+                chckbxNewCheckBox_2.setSelected(true);  // Quản lí nhập hàng
+                chckbxNewCheckBox_3.setSelected(true);  // Quản lí xuất hàng
+                chckbxNewCheckBox_4.setSelected(isManager);  // Quản lí nhân viên
+                chckbxNewCheckBox_5.setSelected(isManager);  // Quản lí tồn kho
+                chckbxNewCheckBox_6.setSelected(isManager);  // Quản lí thống kê
+            }
+        });
+
+        // Thiết lập trạng thái ban đầu
+        comboBox.setSelectedIndex(0);
 
         // Phần Nam: Chứa 2 nút "Sửa quyền" và "Lưu quyền"
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -491,7 +518,7 @@ public class GUI extends JFrame {
                     pstmt.executeUpdate();
                     
                     // Thông báo thành công (nếu cần)
-                    JOptionPane.showMessageDialog(GUI.this, "Thêm nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(QuanTriView.this, "Thêm nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -544,14 +571,14 @@ public class GUI extends JFrame {
                     
                     if (rowsAffected > 0) {
                         // Hiển thị hộp thoại thông báo khi xóa thành công
-                        JOptionPane.showMessageDialog(GUI.this, "Xóa nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(QuanTriView.this, "Xóa nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(GUI.this, "Không thể xóa nhân viên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(QuanTriView.this, "Không thể xóa nhân viên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
                     
                 } catch (SQLException ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(GUI.this, "Lỗi khi xóa nhân viên: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(QuanTriView.this, "Lỗi khi xóa nhân viên: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     try {
                         if (pstmt != null) pstmt.close();
@@ -663,12 +690,12 @@ public class GUI extends JFrame {
                 }
 
                 if (anySelected) {
-                    JOptionPane.showMessageDialog(GUI.this, 
+                    JOptionPane.showMessageDialog(QuanTriView.this, 
                         "Lưu quyền thành công cho " + selectedRole, 
                         "Thông báo", 
                         JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(GUI.this, 
+                    JOptionPane.showMessageDialog(QuanTriView.this, 
                         "Vui lòng chọn quyền để lưu", 
                         "Cảnh báo", 
                         JOptionPane.WARNING_MESSAGE);
@@ -704,7 +731,7 @@ public class GUI extends JFrame {
                 for (int i = 0; i < checkBoxes.size(); i++) {
                     if (checkBoxes.get(i).isSelected()) {
                         String currentName = names[i];
-                        String input = JOptionPane.showInputDialog(GUI.this,
+                        String input = JOptionPane.showInputDialog(QuanTriView.this,
                             "Nhập tên mới cho quyền " + currentName + ":",
                             currentName);
                         
@@ -721,7 +748,7 @@ public class GUI extends JFrame {
                     checkBoxes.get(i).setSelected(permissions[i]);
                 }
 
-                JOptionPane.showMessageDialog(GUI.this,
+                JOptionPane.showMessageDialog(QuanTriView.this,
                     "Đã cập nhật quyền cho " + selectedRole,
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
